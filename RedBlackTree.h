@@ -35,7 +35,7 @@ public:
         rightchild = leftchild = parent = NULL;
     }
 
-    visit(){}
+    visit() {}
 };
 
 node<T> nill(black);
@@ -54,7 +54,7 @@ public:
     node<T>* tree_max();//树的最大最小
     node<T>* tree_min();
     void RB_insert(T value);//插入算法
-    void RB_DELETE(T value);//删除算法
+    bool RB_DELETE(T value);//删除算法
 private:
     node<T>* root;
     void pre_tree_walk(node<T>* root);
@@ -62,6 +62,7 @@ private:
     void left_rotate(node<T>* key);//左旋
     void right_rotate(node<T>* key);//右旋
     void RB_insert_fixup(node<T>* x);//插入调整
+    void RB_DELETE(node<T>* x);//删除某个节点
     void RB_DELETE_fixup(node<T>* x);//删除调整
 }
 
@@ -178,7 +179,7 @@ void redblacktree<T>::RB_insert(T value)//插入算法
         if(value > current->key)
             current = current->rightchild;
         else
-        current = current ->leftchild;
+            current = current ->leftchild;
     }
     x->parent = y;
     if(!y)//当插入节点正好是根时
@@ -192,9 +193,95 @@ void redblacktree<T>::RB_insert(T value)//插入算法
     }
     RB_insert_fixup(x);//插入调整，使之满足红黑树性质
 }
-
+//插入调整
 template<typename T>
 void redblacktree<T>::RB_insert_fixup(node<T>* x)
 {
+    while(x->parent->color == red)
+    {
+        if(x->parent == x->parent->parent->leftchild)//父亲是左支的情况
+        {
+            node<T>* ly = x->parent->parent->rightchild;
+            if(ly->color == red)//叔叔是红色
+            {
+                x->parent->color = black;
+                x->parent->parent->color = red;
+                ly->color = black;
+                x = x->parent->parent;//x上推
+            }
+            else//叔叔是黑色
+            {
+                if(ly == ly->parent->rightchild)//是父亲的右支，先旋转成左支，再调整
+                {
+                    x = x->parent;
+                    left_rotate(x);
+                }
+                x->parent->color = black;
+                x->parent->parent->color = red;
+                right_rotate(x->parent);
+            }
+        }
+        else//父亲是左支
+        {
+            node<T>* ry = x->parent->parent->leftchild;
+            if(ry->color == red)//叔叔是红色
+            {
+                x->parent->color = black;
+                x->parent->parent->color = red;
+                ry->color = black;
+                x = x->parent->parent;//x上推
+            }
+            else//叔叔是黑色
+            {
+                if(ry == ry->parent->leftchild)//是父亲的左支时，先旋转，再调整
+                {
+                    x = x->parent;
+                    right_rotate(x);
+                }
+                x->parent->color = black;
+                x->parent->parent->color = red;
+                left_rotate(x->parent);
+            }
+        }
+    }
+}
+
+
+template <typename T>
+bool redblacktree<T>::RB_DELETE(T value)
+{
+    node<T>* x = rbsearch(value);//找该节点
+    if(!x)//未找到
+        {cout << "can't find the key to be deleted" << endl;return false;}
+    else
+        RB_DELETE(x);//找到后进行删除操作
+    return true;
+}
+
+
+template <typename T>
+void redblacktree<T>::RB_DELETE(node<T>* x)
+{
+    node<T>* z = NULL;
+    if(!x->rightchild || !x->leftchild)
+        z = x;
+    else
+        z = tree_successor(x);//如果x节点有两个儿子，则设z为其后继
+    node<T>* y = NULL;
+    if(z->leftchild)
+        y = z->leftchild;
+    else
+        y = z->rightchild;
+    y->parent = z->parent;
+    if(!z->parent)//当删除的是根时
+        root = y;
+    else if(z = z->parent->leftchild)
+        y = z->parent->leftchild;
+    else
+        y = z->parent->rightchild;
+    if(x != z)
+            x->value = z->value;
+    if(z->color =  black)//当删除的节点时黑色时，则需要对树进行调整
+        RB_DELETE_fixup(y);
 }
 #endif // REDBLACKTREE_H_INCLUDED
