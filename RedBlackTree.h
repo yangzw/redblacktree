@@ -246,7 +246,7 @@ void redblacktree<T>::RB_insert_fixup(node<T>* x)
     }
 }
 
-
+//删除某个元素
 template <typename T>
 bool redblacktree<T>::RB_DELETE(T value)
 {
@@ -258,7 +258,7 @@ bool redblacktree<T>::RB_DELETE(T value)
     return true;
 }
 
-
+//删除某个节点
 template <typename T>
 void redblacktree<T>::RB_DELETE(node<T>* x)
 {
@@ -283,5 +283,84 @@ void redblacktree<T>::RB_DELETE(node<T>* x)
             x->value = z->value;
     if(z->color =  black)//当删除的节点时黑色时，则需要对树进行调整
         RB_DELETE_fixup(y);
+}
+
+//删除调整
+template<typename T>
+void redblacktree<T>::RB_DELETE_fixup(node<T>* x)
+{
+    while(x != root && x->color == black)
+    {
+        node<T>* w = NULL;
+        if(x = x->parent->leftchild)
+        {
+            w = x->parent->rightchild;
+            if(w->color == red)//当x的兄弟是红色的时候，通过旋转将其兄弟转换为黑色
+            {
+                w->color = black;
+                x->parent->color = red;
+                left_rotate(x->parent);
+            }
+            //当x的兄弟是黑色时
+            //当w的两个儿子都是黑色时
+            if(w->leftchild->color == black && w->rightchild->color == black)
+            {
+                w->color = red;//w颜色减去黑色
+                x = x->parent;//x上移
+            }
+            //当w的左儿子是红色，右儿子是黑色时,把右儿子转换为红色
+            else if(w->leftchild->color == red && w->rightchild->color == black)
+            {
+                w->leftchild->color = black;
+                w->color = red;
+                right_rotate(w);
+                w = w->parent;
+            }
+            //w的右儿子是红色
+            else
+            {
+                w->color = x->parent->color;
+                x->parent->color = black;
+                w->rightchild->color = black;
+                left_rotate(x->parent);
+                x = root;
+            }
+        }//if(x = x->parent->leftchild)
+        else
+        {
+            w = x->parent->leftchild;
+            if(w->color == red)//当x的兄弟是红色的时候，通过旋转将其兄弟转换为黑色
+            {
+                w->color = black;
+                x->parent->color = red;
+                right_rotate(x->parent);
+            }
+            //当x的兄弟是黑色时
+            //当w的两个儿子都是黑色时
+            if(w->leftchild->color == black && w->rightchild->color == black)
+            {
+                w->color = red;//w颜色减去黑色
+                x = x->parent;//x上移
+            }
+            //当w的右儿子是红色，左儿子是黑色时,把左儿子转换为红色
+            else if(w->leftchild->color == red && w->rightchild->color == black)
+            {
+                w->rightchild->color = black;
+                w->color = red;
+                left_rotate(w);
+                w = w->parent;
+            }
+            //w的左儿子是红色
+            else
+            {
+                w->color = x->parent->color;
+                x->parent->color = black;
+                w->leftchild->color = black;
+                right_rotate(x->parent);
+                x = root;
+            }
+        }//else
+    }//while
+    x->color = black;
 }
 #endif // REDBLACKTREE_H_INCLUDED
