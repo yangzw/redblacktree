@@ -7,6 +7,7 @@ int main()
 {
     redblacktree<int> test;
     int i(0);
+    cout << "try for brach" << endl;
     for(; i < 10; ++i)
     {
         test.RB_insert(i);
