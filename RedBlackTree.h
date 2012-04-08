@@ -41,7 +41,6 @@ public:
     void visit() {cout << value;}//测试用
 };
 
-//node<T> nill(black);
 
 
 template<typename T>
@@ -50,7 +49,11 @@ class redblacktree
 public:
     redblacktree()
     {
-        root = NULL;
+	nill = new node<T>(black) ;
+	nill->parent = nill;
+	nill->leftchild = nill;
+       	nill->rightchild = nill;//nill的各种指针都指向自己
+        root = nill;
     }
     ~redblacktree(){tree_destroy(root);}
     node<T>* rbsearch(T key);//查找
@@ -62,6 +65,7 @@ public:
     void RB_DELETE(node<T>* x);//删除某个节点
 private:
     node<T>* root;
+    node<T>* nill;//代替NULL
     void pre_tree_walk(node<T>* root);
     void tree_destroy(node<T>* current);
     node<T>* tree_successor(node<T>* x);//求节点的后继
@@ -75,12 +79,12 @@ private:
 template<typename T>
 void redblacktree<T>::tree_destroy(node<T>* current)
 {
-    if(current)
+    if(current != nill)
     {
         tree_destroy(current->leftchild);
         tree_destroy(current->rightchild);
+    	delete current;
     }
-    delete current;
 }
 
 //查找
@@ -88,7 +92,7 @@ template<typename T>
 node<T>* redblacktree<T>::rbsearch(T key)
 {
     node<T>* x = root;
-    while(x!= NULL && key != x->value)
+    while(x!= nill && key != x->value)
     {
         if(key > x->value)
             x = x ->rightchild;
@@ -102,7 +106,7 @@ node<T>* redblacktree<T>::rbsearch(T key)
 template<typename T>
 void redblacktree<T>::pre_tree_walk(node<T>* root)
 {
-    if(root)
+    if(root != nill)
     {
         pre_tree_walk(root->leftchild);
         root->visit();
@@ -120,7 +124,7 @@ template<typename T>
 node<T>*  redblacktree<T>::tree_max()
 {
     node<T>* current = root;
-    while(current)
+    while(current != nill)
         current = current->rightchild;
     return current;
 }
@@ -128,7 +132,7 @@ template<typename T>
 node<T>* redblacktree<T>::tree_min()
 {
     node<T>* current = root;
-    while(current)
+    while(current != nill)
         current = current->leftchild;
     return current;
 }
@@ -137,10 +141,10 @@ node<T>* redblacktree<T>::tree_min()
 template<typename T>
 node<T>* redblacktree<T>::tree_successor(node<T>* x)
 {
-    if(!x->rightchild)//x有右孩子时，后继就是右孩子的最小节点
-        return tree_min(x->leftchild);
+    if(x->rightchild == nill)//x有右孩子时，后继就是右孩子的最小节点
+        return tree_min(x->rightchild);
     node<T>* y = x->parent;//向上求后继
-    while(y && x == y->rightchild)
+    while(y!= nill && x == y->rightchild)
     {
         x = y;
         y = y->parent;
@@ -157,7 +161,7 @@ void redblacktree<T>::left_rotate(node<T>* key)
     y->leftchild->parent = key;
     y->parent = key->parent;
     y->leftchild = key;
-    if(!key->parent)
+    if(key->parent == nill)
         root = y;
     else if(key == key->parent->leftchild)
         key->parent->leftchild = y;
@@ -175,7 +179,7 @@ void redblacktree<T>::right_rotate(node<T>* key)
     y->rightchild->parent = key;
     y->parent = key->parent;
     y->rightchild = key;
-    if(!key->parent)
+    if(key->parent == nill)
         root = y;
     else if(key == key->parent->leftchild)
         key->parent->leftchild = y;
@@ -191,9 +195,10 @@ void redblacktree<T>::RB_insert(T value)//插入算法
     cout << value;
     /**/
     node<T>* x = new node<T>(value, red);
+    x->parent = x->rightchild = x->leftchild = nill;
     node<T>* current = root;
     node<T>* y = NULL;
-    while(current)
+    while(current != nill)
     {
 //        cout << "aaa" << endl;
         y = current;
@@ -203,7 +208,7 @@ void redblacktree<T>::RB_insert(T value)//插入算法
             current = current ->leftchild;
     }
     x->parent = y;
-    if(!y)//当插入节点正好是根时
+    if(y == nill)//当插入节点正好是根时
         {
             root = x;
             x->color = black;
@@ -221,18 +226,16 @@ void redblacktree<T>::RB_insert(T value)//插入算法
 template<typename T>
 void redblacktree<T>::RB_insert_fixup(node<T>* x)
 {
-    /*测试用*/
+    /*测试用
     if(!x->parent)
         return;
-    /**/
+    */
     while(x != root && x->parent->color == red)
     {
         if(x->parent == x->parent->parent->leftchild)//父亲是左支的情况
         {
             node<T>* ly = x->parent->parent->rightchild;
-            if(!ly)//叔叔为空
-                right_rotate(x->parent->parent);
-            else if(ly->color == red)//叔叔是红色
+            if(ly->color == red)//叔叔是红色
             {
                 x->parent->color = black;
                 x->parent->parent->color = red;
@@ -241,22 +244,20 @@ void redblacktree<T>::RB_insert_fixup(node<T>* x)
             }
             else//叔叔是黑色
             {
-                if(ly == ly->parent->rightchild)//是父亲的右支，先旋转成左支，再调整
+                if(x == x->parent->rightchild)//是父亲的右支，先旋转成左支，再调整
                 {
                     x = x->parent;
                     left_rotate(x);
                 }
                 x->parent->color = black;
                 x->parent->parent->color = red;
-                right_rotate(x->parent);
+                right_rotate(x->parent->parent);
             }
         }
         else//父亲是右支
         {
             node<T>* ry = x->parent->parent->leftchild;
-            if(!ry)//叔叔为空
-                left_rotate(x->parent->parent);
-            else if(ry->color == red)//叔叔是红色
+            if(ry->color == red)//叔叔是红色
             {
                 x->parent->color = black;
                 x->parent->parent->color = red;
@@ -265,14 +266,14 @@ void redblacktree<T>::RB_insert_fixup(node<T>* x)
             }
             else//叔叔是黑色
             {
-                if(ry == ry->parent->leftchild)//是父亲的左支时，先旋转，再调整
+                if(x == x->parent->leftchild)//是父亲的左支时，先旋转，再调整
                 {
                     x = x->parent;
                     right_rotate(x);
                 }
                 x->parent->color = black;
                 x->parent->parent->color = red;
-                left_rotate(x->parent);
+                left_rotate(x->parent->parent);
             }
         }
     }
@@ -284,7 +285,7 @@ template <typename T>
 bool redblacktree<T>::RB_DELETE(T value)
 {
     node<T>* x = rbsearch(value);//找该节点
-    if(!x)//未找到
+    if(x == nill)//未找到
         {cout << "can't find the key to be deleted" << endl;return false;}
     else
         RB_DELETE(x);//找到后进行删除操作
@@ -296,17 +297,17 @@ template <typename T>
 void redblacktree<T>::RB_DELETE(node<T>* x)
 {
     node<T>* z = NULL;
-    if(!x->rightchild || !x->leftchild)
+    if(x->rightchild == nill || x->leftchild == nill)
         z = x;
     else
         z = tree_successor(x);//如果x节点有两个儿子，则设z为其后继
     node<T>* y = NULL;
-    if(z->leftchild)
+    if(z->leftchild != nill)
         y = z->leftchild;
     else
         y = z->rightchild;
     y->parent = z->parent;
-    if(!z->parent)//当删除的是根时
+    if(z->parent == nill)//当删除的是根时
         root = y;
     else if(z == z->parent->leftchild)
         y = z->parent->leftchild;
@@ -316,6 +317,7 @@ void redblacktree<T>::RB_DELETE(node<T>* x)
             x->value = z->value;
     if(z->color ==  black)//当删除的节点时黑色时，则需要对树进行调整
         RB_DELETE_fixup(y);
+    delete z;
 }
 
 //删除调整
@@ -325,7 +327,7 @@ void redblacktree<T>::RB_DELETE_fixup(node<T>* x)
     while(x != root && x->color == black)
     {
         node<T>* w = NULL;
-        if(x == x->parent->leftchild)
+        if(x == x->parent->leftchild)//x是左孩子时
         {
             w = x->parent->rightchild;
             if(w->color == red)//当x的兄弟是红色的时候，通过旋转将其兄弟转换为黑色
@@ -359,7 +361,7 @@ void redblacktree<T>::RB_DELETE_fixup(node<T>* x)
                 x = root;
             }
         }//if(x == x->parent->leftchild)
-        else
+        else//x是右孩子时
         {
             w = x->parent->leftchild;
             if(w->color == red)//当x的兄弟是红色的时候，通过旋转将其兄弟转换为黑色
@@ -395,6 +397,7 @@ void redblacktree<T>::RB_DELETE_fixup(node<T>* x)
         }//else
     }//while
     x->color = black;
+    nill.color = black;//一开始x为nill时，会在第一次上移前把nill颜色设置为红色
 }
 
 #endif // REDBLACKTREE_H_INCLUDED
