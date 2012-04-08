@@ -41,8 +41,6 @@ public:
     void visit() {cout << value;}//测试用
 };
 
-node<T> nill(black);
-nill.parent = nill.leftchild = nill.rightchild = &nill;//nill的各种指针都指向自己
 
 
 template<typename T>
@@ -51,6 +49,10 @@ class redblacktree
 public:
     redblacktree()
     {
+	nill = new node<T>(black) ;
+	nill->parent = nill;
+	nill->leftchild = nill;
+       	nill->rightchild = nill;//nill的各种指针都指向自己
         root = nill;
     }
     ~redblacktree(){tree_destroy(root);}
@@ -63,6 +65,7 @@ public:
     void RB_DELETE(node<T>* x);//删除某个节点
 private:
     node<T>* root;
+    node<T>* nill;//代替NULL
     void pre_tree_walk(node<T>* root);
     void tree_destroy(node<T>* current);
     node<T>* tree_successor(node<T>* x);//求节点的后继
