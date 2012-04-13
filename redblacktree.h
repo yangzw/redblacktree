@@ -1,6 +1,7 @@
 #ifndef REDBLACKTREE_H_INCLUDED
 #define REDBLACKTREE_H_INCLUDED
 #include <iostream>
+#include"manager.h"
 
 using namespace std;
 
@@ -59,6 +60,7 @@ private:
 template<class T>
 class redblacktree
 {
+	friend class manager;
 public:
     redblacktree()
     {
@@ -78,7 +80,7 @@ public:
     void mid_tree_walk();//中序遍历，测试用
     node<T>* tree_max(node<T>* rt);//树的最大最小
     node<T>* tree_min(node<T>* rt);
-    void search(const T& value);
+    bool search(const T& value) const;
     void RB_insert(T value);//插入算法
     bool RB_DELETE(T value);//删除算法
     void RB_DELETE(node<T>* x);//删除某个节点
@@ -124,13 +126,13 @@ int redblacktree<T>::getsize()
 
 //查找
 template<class T>
-void redblacktree<T>::search(const T& key)
+bool redblacktree<T>::search(const T& key) const
 {
 	node<T>* x = rbsearch(key);
 	if(x == nill)
-		cout << "sorry, can't find" << endl;
+		return false;
 	else
-		cout << "we find it!" << endl;
+		return true;
 }
 
 template<class T>

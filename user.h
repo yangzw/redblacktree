@@ -5,6 +5,7 @@
 #define USER_H_INCLUDED
 #include<string>
 #include"book.h"
+#include"manager.h"
 #include<iostream>
 #define BORROWBOOKLIMIT 12
 
@@ -12,17 +13,19 @@ using namespace std;
 
 class user
 {
+	friend class manager
 	private:
 		string name;//姓名
 		string number;//学号
 		string email;//邮箱
 		book* mybook[BORROWBOOKLIMIT];//借的书
 		int booknum;//借书的数量
+		string key;//密码
 		bool isbookfull() const;//判断是否已经借满了书
 	public:
 		user();
 		user(const string& name);
-		user(const string& name, const string& number, const string& email);
+		user(const string& name, const string& number, const string& email const string& key);
 		user(const user &usr);//复制构造函数
 		operator=(const user &usr);//赋值操作符
 		void getinfor();
@@ -51,11 +54,12 @@ user::user(const string& name)
 		mybook[i] = NULL;
 }
 
-user::user(const string& name, const string* number, const tring& email)
+user::user(const string& name, const string* number, const tring& email, const string& key)
 {
 	this->name = name;
 	this->number = number;
 	this->email = email;
+	this->key = key;
 	for(int i = 0; i < BORROWBOOKLIMIT; ++i)
 		mybook[i] = NULL;
 }
@@ -66,15 +70,16 @@ user::user(const user &usr)
 	name = usr.name;
 	number = usr.number;
 	email = usr.email;
+	key = usr.key;
 	for(int i = 0; i < BORROWBOOKLIMIT; ++i)
 		mybook[i] = usr.mybook[i];
 }
-
 user::operator=(const user &usr)
 {
 	name = usr.name;
 	number = usr.number;
 	email = usr.email;
+	key = usr.key;
 	for(int i = 0; i < BORROWBOOKLIMIT; ++i)
 		mybook[i] = usr.mybook[i];
 	return *this;

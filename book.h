@@ -5,6 +5,7 @@
 #define BOOK_H_INCLUDED
 #include<string>
 #include<iostream>
+#include"manager.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ enum State{clean=0, borrowed, advanced-borrowed};
 class book
 {
 priate:
+	friend class manager
 	string bkname;
 	string author;
 	string isbn;
@@ -96,4 +98,4 @@ void book::setisbn(const string& isbn)
 {
 	this->isbn = isbn;
 }
-#endif // USER_H_INCLUDED
+#endif // BOOK_H_INCLUDED
