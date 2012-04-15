@@ -68,7 +68,7 @@ private:
 template<class K, class T>
 class redblacktree
 {
-	//friend class manager;
+	friend class manager;
 public:
     redblacktree()
     {
@@ -83,11 +83,11 @@ public:
     {
         tree_destroy(root);
     }
-    node<K,T>* rbsearch(const K& srkey);//查找
     void pre_tree_walk();//前序遍历
     void mid_tree_walk();//中序遍历，测试用
     node<K,T>* tree_max(node<K,T>* rt);//树的最大最小
     node<K,T>* tree_min(node<K,T>* rt);
+    bool search(const K& srkey, T* data);
     bool search(const K& srkey);
     void RB_insert(const T& data,const K& insrtkey);//插入算法
     bool RB_DELETE(const K& dkey);//删除算法
@@ -102,6 +102,7 @@ private:
     void mid_tree_walk(node<K,T>* root);
     void tree_destroy(node<K,T>* current);
     node<K,T>* tree_successor(node<K,T>* x);//求节点的后继
+    node<K,T>* rbsearch(const K& srkey);//查找
     void left_rotate(node<K,T>* x);//左旋
     void right_rotate(node<K,T>* x);//右旋
     void RB_insert_fixup(node<K,T>* x);//插入调整
@@ -141,6 +142,23 @@ bool redblacktree<K,T>::search(const K& srkey)
 		return false;
 	else
 		return true;
+}
+
+//查找2
+template<class K, class T>
+bool redblacktree<K,T>::search(const K& srkey,  T* datapoint)
+{
+	node<K,T>* x = rbsearch(srkey);
+	if(x == nill)
+	{
+		datapoint = NULL;
+		return false;
+	}
+	else
+	{
+        	datapoint = &x->data;
+		return true;
+	}
 }
 
 template<class K, class T>

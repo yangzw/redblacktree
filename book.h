@@ -9,7 +9,7 @@
 
 using namespace std;
 
-enum State{clean=0, borrowed, advanced-borrowed};
+enum State{clean=0, borrowed};
 
 class book
 {

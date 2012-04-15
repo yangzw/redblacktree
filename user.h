@@ -7,7 +7,7 @@
 #include"book.h"
 #include"manager.h"
 #include<iostream>
-#define BORROWBOOKLIMIT 12
+#define BORROWBOOKLIMIT 5
 
 using namespace std;
 
@@ -118,22 +118,22 @@ void user::getbookinfo()
 
 }
 
-void setname(const string& name)
+void user::setname(const string& name)
 {
 	 this->name = name;
 }
 
-void  setnumber(const string& number)
+void  user::setnumber(const string& number)
 {
 	this->number = number;
 }
 
-void setemail(const string& email)
+void user::setemail(const string& email)
 {
 	this->email = email;
 }
 
-bool addbook(book* newbook)
+bool user::addbook(book* newbook)
 {
 	if(ibookful())
 		return false;
@@ -144,12 +144,12 @@ bool addbook(book* newbook)
 	}
 }
 
-int getbooknumb() const
+int user::getbooknumb() const
 {
 	return booknum;
 }
 
-void returnbook(book* rbook)
+void user::returnbook(book* rbook)
 {
 	int i(0);
 	for(; i < BORROWBOOKLIMIT, mybook[i] != rbook; ++i);
