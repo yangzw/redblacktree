@@ -1,10 +1,12 @@
 #include <iostream>
 #include "redblacktree.h"
+#include "manager.h"
 
 using namespace std;
 
 int main()
 {
+	/*
     redblacktree<int,int> test;
     int i(0);
     cout << "try for brach" << endl;
@@ -27,5 +29,14 @@ int main()
     test.RB_DELETE(7);
     test.pre_tree_walk();
     test.mid_tree_walk();
+    */
+    manager Mainmanager;
+    Mainmanager.addusr();
+    Mainmanager.getuserinfo();
+    Mainmanager.getlibraryinfo();
+    Mainmanager.addbook();
+    Mainmanager.getlibraryinfo();
+    Mainmanager.borrowbook();
+    Mainmanager.getuserinfo();
     return 0;
 }
