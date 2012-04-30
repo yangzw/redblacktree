@@ -5,6 +5,7 @@
 #define MANAGER_H_INCLUDED
 #include<iostream>
 #include<string>
+#include<sstream>
 #include "user.h"
 #include "book.h"
 #include "redblacktree.h"
@@ -25,13 +26,12 @@ private:
     bool searchuser(const string& usrname) const;
     bool userkey(user* ur) const;//验证用户的密码
     bool ismanagerkey() const;//验证管理员密码
-    //bool loadfile(const string& bookfile, const string& userfile) const;//加载数据
-    //bool writetofile(const string& bookfile, const string& usergfile) const;//保存书库的变化
+    bool loadfile(const string& bookfile, const string& userfile) const;//加载数据
+    bool writetofile(const string& bookfile, const string& usergfile) const;//保存书库的变化
+    void addusr(const string& uname, const string& unumber, const string& uemail, const string& ukey);
 public:
     manager();
-    //manager(const string& filename);
-    //void loadfile();//加载数据
-    //void setdefaultfile();//设置数据默认存取的文件
+    void setdefaultfile();//设置数据默认存取的文件
     void searchbook();//查找书籍
     void getuserinfo();//得到用户的信息
     void addusr();//加入用户
@@ -51,7 +51,7 @@ manager::manager()
     booknum = 0;
     managerkey = "manager";
 };
-/*
+
 manager::manager(const string& bookfile, const string& userfile)
 {
     loadfile(bookfile, userfile);
@@ -62,7 +62,7 @@ void manager::loadfile()
 {
     cout << "Input the bookfile's name: " << endl;
     string bookfilename;
-    cin >> filename;
+    cin >> bookfilename;
     cout << "Input the userfile's name: " << endl;
     string userfilename;
     cin >> userfilename;
@@ -76,14 +76,65 @@ bool manager::loadfile(const string& bookfile, const string& userfile) const
 {
     ifstream inbkfile;
     inbkfile.open(bookfile);
+    int flag(0);//标志，至少有一个文件读入成功就设为1;
     if(!inbkfile)
     {
         cerr << "error:unable to open bookfile!" << endl;
     }
     else
     {
-        string
-        inbkfile >>
+        string tmp;
+	flag = 1;
+	while(getline(inbkfile,tmp))
+	{
+		stringstream ss(tmp);
+		string bkname;
+		string isbn;
+		string author;
+		State state;
+		ss >> bkname;
+		ss >> isbn;
+		ss >> author;
+		ss >> state;
+		book* bk = new book(bkname,isbn,auhor,state);
+		booktree.Rb_insert(*bk);
+	}
+    }
+    inbkfile.close();
+    ifstream inurfile;
+    inurfile.open(userfile);
+    if(!inurfile)
+    {
+    	cerr << "erro:ubable to open bookfile!" << endl;
+    }
+    else
+    {
+    	string tmp;
+	flag = 1;
+	while(getline(inurfile,tmp))
+	{
+		stringstream ss(tmp);
+		string name;
+	       	string number;
+		string email;
+		string key;
+		int bknum;
+		ss >> name;
+		ss >> number;
+		ss >> email;
+		ss >> key;
+		ss >> bknum;
+		user* usr = new user(name,number,email,key);
+		string tmpbk;
+		for(int i = 0; i < bknum; i++)
+		{
+			ss >> tmpbk;
+			book* bk(0);
+			search(tmpbk,bk);
+			usr->addbook(bk);
+		}
+		usertree.RB_insert(*usr);
+	}
     }
 }
 
@@ -92,7 +143,6 @@ void manager::setdefaultfile()
 {
     loadfile();
 }
-*/
 
 bool manager::searchbook(const string& bookname,book*& srbook) const
 {
@@ -214,8 +264,16 @@ void manager::deluser()
     else
     {
         if(userkey(usr))
-            usertree.RB_DELETE(delusr);
-        usernum--;
+        {
+            if(usr->booknum)
+                cout << "you have some book not returned yet!" << endl;
+            else
+            {
+                usertree.RB_DELETE(delusr);
+                usernum--;
+		cout << "user deleted!" << endl;
+            }
+        }
     }
 }
 
@@ -291,8 +349,14 @@ void manager::delbook()
             cout << "can't find the book" << endl;
         else
         {
-            booktree.RB_DELETE(delbk);
-            booknum--;
+            if(bk->state == borrowed)
+                cout << "the book is not returned yet!" << endl;
+            else
+            {
+                booktree.RB_DELETE(delbk);
+                booknum--;
+		cout << "Done!" << endl;
+            }
         }
     }
 }
@@ -322,6 +386,7 @@ void manager::borrowbook()
                 {
                     usr->addbook(bk);
                     bk->setstate(borrowed);
+		    cout << "Done!" << endl;
                 }
             }
             else
@@ -351,6 +416,7 @@ void manager::returnbook()
         {
             usr->returnbook(bk);
             bk->setstate(clean);
+	    cout << "Done!" << endl;
         }
     }
 }

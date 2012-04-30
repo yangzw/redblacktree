@@ -102,6 +102,10 @@ void user::showinfo()
     cout << "Xuehao: " << number << endl;
     cout << "Email: " << email << endl;
     cout << "Borrowed BookNumber: " << booknum << endl;
+    int i(0);
+    cout << "The book you have borrowed is:" << endl;
+    while(mybook[i])
+	    cout << mybook[i++]->getbkname() << endl;
 }
 
 string user::getname() const
@@ -159,8 +163,16 @@ int user::getbooknumb() const
 void user::returnbook(book* rbook)
 {
     int i(0);
-    while(i < BORROWBOOKLIMIT && mybook[i++] != rbook);
-    mybook[i] = NULL;
-    booknum --;
+    while(i < BORROWBOOKLIMIT)
+    {
+	    if(mybook[i] == rbook)
+	    {
+    		mybook[i] = NULL;
+    		booknum --;
+		return;
+	    }
+	    i++;
+    }
+    cout << "error, can't return the book!" << endl;
 }
 #endif // USER_H_INCLUDED
