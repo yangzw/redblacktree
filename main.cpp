@@ -39,24 +39,30 @@ int main()
 
 void printhead()
 {
-    cout << "		--------------------------------------------" << endl;
-    cout << "		*	Welcome to the libaray		   *" << endl;
-    cout << "		--------------------------------------------" << endl;
-    cout << "		* 1.注册 2.查看用户信息 3.按照书名查找书籍 *" << endl;
-    cout << "		* 4.借书    5.还书   	6.注销用户         *" << endl;
-    cout << "		* 7.添加图书（管理员）8.删除图书（管理员） *" << endl;
-    cout << "		* 9.查看图书馆信息   0.退出  	 	   *" << endl;
-    cout << "		---------------------------------------------" << endl;
+    cout << "		-----------------------------------------------" << endl;
+    cout << "		*	  Welcome to the libaray	      *" << endl;
+    cout << "		-----------------------------------------------" << endl;
+    cout << "		* 1.注册   2.查看用户信息  3.按照书名查找书籍 *" << endl;
+    cout << "		* 4.借书   5.还书   	   6.注销用户         *" << endl;
+    cout << "		* 7.添加图书（管理员）     8.删除图书（管理员)*" << endl;
+    cout << "		* 9.查看图书馆信息         10.保存修改 	      *" << endl;
+    cout << "		* 11.重新载入文件 	   0.退出 	      *" << endl;
+    cout << "		-----------------------------------------------" << endl;
 }
 
 void start(manager& mmanager)
 {
-    mmanger.loadfile();
+    cout << "load file? y/n" << endl;
+    char choice1(0);
+    cin >> choice1;
+    getchar();
+    if(choice1 == 'y')
+    	mmanager.loadfile();
     printhead();
     cout << endl;
     cout << "< < < < < < < < < < < < < "<< endl;
     int choice(0);
-    while(cin >> choice && choice != 0)
+    while(cin >> choice && getchar() && choice != 0)
     {
         switch(choice)
         {
@@ -89,6 +95,12 @@ void start(manager& mmanager)
         case(9):
             mmanager.getlibraryinfo();
             break;
+	case(10):
+	    mmanager.savechanges();
+	    break;
+	case(11):
+	    mmanager.setdefaultfile();
+	    break;
         default:
             cout << "Wrong input!" << endl;
         }

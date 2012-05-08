@@ -16,6 +16,7 @@ template<class K, class T>
 class node
 {
     friend class redblacktree<K,T>;//模板的友元声明
+    friend class manager;
 private:
     K key;
     T data;

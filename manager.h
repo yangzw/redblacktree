@@ -4,6 +4,7 @@
 #ifndef MANAGER_H_INCLUDED
 #define MANAGER_H_INCLUDED
 #include<iostream>
+#include<fstream>
 #include<string>
 #include<sstream>
 #include "user.h"
@@ -18,6 +19,8 @@ private:
     int booknum;//书的数目
     int usernum;//用户数量
     string managerkey;//管理员密码
+    string bookfilename;
+    string userfilename;
     redblacktree<string,book> booktree;//用户的红黑树
     redblacktree<string,user> usertree;//图书的红黑树
     bool searchbook(const string& bookname,book*& srbook) const;//搜索图书，按照书名搜索
@@ -26,11 +29,15 @@ private:
     bool searchuser(const string& usrname) const;
     bool userkey(user* ur) const;//验证用户的密码
     bool ismanagerkey() const;//验证管理员密码
-    bool loadfile(const string& bookfile, const string& userfile) const;//加载数据
-    bool writetofile(const string& bookfile, const string& usergfile) const;//保存书库的变化
+    bool loadfileprocess();//加载数据
     void addusr(const string& uname, const string& unumber, const string& uemail, const string& ukey);
+    void savebook();
+void savebook(node<string,book>* root, node<string,book>* nill);
+void saveuser();
+void saveuser(node<string,user>* root, node<string,user>* nill);
 public:
     manager();
+    void loadfile();
     void setdefaultfile();//设置数据默认存取的文件
     void searchbook();//查找书籍
     void getuserinfo();//得到用户的信息
@@ -50,92 +57,93 @@ manager::manager()
     usernum = 0;
     booknum = 0;
     managerkey = "manager";
+    bookfilename = userfilename = "none";
 };
-
-manager::manager(const string& bookfile, const string& userfile)
-{
-    loadfile(bookfile, userfile);
-}
 
 
 void manager::loadfile()
 {
     cout << "Input the bookfile's name: " << endl;
-    string bookfilename;
-    cin >> bookfilename;
+    getline(cin, bookfilename);
     cout << "Input the userfile's name: " << endl;
-    string userfilename;
-    cin >> userfilename;
-    if(loadfile(bookfilename, userfilename))
+    getline(cin, userfilename);
+    if(loadfileprocess())
         cout << "Data load sucessfully!" << endl;
     else
         cout << "Faile to load file" << endl;
 }
 
-bool manager::loadfile(const string& bookfile, const string& userfile) const
+bool manager::loadfileprocess()
 {
-    ifstream inbkfile;
-    inbkfile.open(bookfile);
+    fstream inbkfile;
+    inbkfile.open(bookfilename.c_str(), ios::in);
     int flag(0);//标志，至少有一个文件读入成功就设为1;
     if(!inbkfile)
     {
-        cerr << "error:unable to open bookfile!" << endl;
+        cout << "error:unable to open bookfile!" << endl;
     }
     else
     {
         string tmp;
-	flag = 1;
-	while(getline(inbkfile,tmp))
-	{
-		stringstream ss(tmp);
-		string bkname;
-		string isbn;
-		string author;
-		State state;
-		ss >> bkname;
-		ss >> isbn;
-		ss >> author;
-		ss >> state;
-		book* bk = new book(bkname,isbn,auhor,state);
-		booktree.Rb_insert(*bk);
-	}
+        flag = 1;
+        while(getline(inbkfile,tmp))
+        {
+            stringstream ss(tmp);
+            string bkname;
+            string bknametmp;
+            string isbn;
+            string author;
+            string state;
+            ss >> isbn;
+            ss >> author;
+            ss >> state;
+	    /*读入书名*/
+            ss >> bkname;
+            while(ss >> bknametmp)
+                bkname = bkname + " " + bknametmp;
+            book* newbk = new book(bkname,isbn,author,state);
+            booktree.RB_insert(*newbk,newbk->bkname);
+            booknum++;
+        }
     }
     inbkfile.close();
-    ifstream inurfile;
-    inurfile.open(userfile);
+    fstream inurfile;
+    inurfile.open(userfilename.c_str(), ios::in);
     if(!inurfile)
     {
-    	cerr << "erro:ubable to open bookfile!" << endl;
+        cout << "erro:ubable to open userfile!" << endl;
     }
     else
     {
-    	string tmp;
-	flag = 1;
-	while(getline(inurfile,tmp))
-	{
-		stringstream ss(tmp);
-		string name;
-	       	string number;
-		string email;
-		string key;
-		int bknum;
-		ss >> name;
-		ss >> number;
-		ss >> email;
-		ss >> key;
-		ss >> bknum;
-		user* usr = new user(name,number,email,key);
-		string tmpbk;
-		for(int i = 0; i < bknum; i++)
-		{
-			ss >> tmpbk;
-			book* bk(0);
-			search(tmpbk,bk);
-			usr->addbook(bk);
-		}
-		usertree.RB_insert(*usr);
-	}
+        string tmp;
+        flag = 1;
+        while(getline(inurfile,tmp))
+        {
+            stringstream ss(tmp);
+            string name;
+            string number;
+            string email;
+            string key;
+            int bknum;
+            ss >> name;
+            ss >> number;
+            ss >> email;
+            ss >> key;
+            ss >> bknum;
+            user* usr = new user(name,number,email,key);
+            string tmpbk;
+	    for(int i = 0; i < bknum; i++)
+	    {
+		getline(inurfile, tmpbk);
+                book* bk(0);
+                booktree.search(tmpbk,bk);
+                usr->addbook(bk);
+            }
+            usertree.RB_insert(*usr,usr->name);
+	    usernum++;
+        }
     }
+    return flag;
 }
 
 //设置数据文件默认保存的位置
@@ -158,7 +166,7 @@ void manager::searchbook()
 {
     cout << "Input the book' name： ";
     string bookname;
-    cin >> bookname;
+    getline(cin, bookname);
     book* srbook = NULL;
     if(searchbook(bookname,srbook))
         srbook->getinfor();
@@ -181,7 +189,7 @@ void manager::getuserinfo()
 {
     cout << "Please input your name: " << endl;
     string usrname;
-    cin >> usrname;
+    getline(cin, usrname);
     user* sruser = NULL;
     if(searchuser(usrname, sruser))
     {
@@ -200,30 +208,31 @@ void manager::addusr()
     user usr;
     cout << "Input your name: ";
     string tmp;
-    cin >> tmp;
+    getline(cin,tmp);
     while(searchuser(tmp))
     {
         cout << "Sorry, the name is already token" << endl;
         cout << "Input again? input y or n " << endl;
         char choice;
         cin >> choice;
+	getchar();
         if(choice == 'y')
         {
             cout << "Input your name: ";
-            cin >> tmp;
+            getline(cin, tmp);
         }
         else
             return;
     }
     usr.setname(tmp);
     cout << "Input your student number: ";
-    cin >> tmp;
+    getline(cin, tmp);
     usr.setnumber(tmp);
     cout << "Input your email: ";
-    cin >> tmp;
+    getline(cin, tmp);
     usr.setemail(tmp);
     cout <<"Input your key: ";
-    cin >> usr.key;
+    getline(cin,usr.key);
     cout << "Congratulations! you finish the register!" << endl;
     usernum++;
     usertree.RB_insert(usr,usr.name);
@@ -234,17 +243,18 @@ bool manager::userkey(user* ur) const
 {
     cout << "input your key:" << endl;
     string ukey;
-    cin >> ukey;
+    getline(cin,ukey);
     while(ukey != ur->key)
     {
         cout << "wrong key!" << endl;
         cout << "Input again? input y or n " << endl;
         char choice;
         cin >> choice;
+	getchar();
         if(choice == 'y')
         {
             cout << "Input your key: ";
-            cin >> ukey;
+	    getline(cin,ukey);
         }
         else
             return false;
@@ -257,7 +267,7 @@ void manager::deluser()
 {
     string delusr;
     cout << "Input your name:";
-    cin >> delusr;
+    getline(cin, delusr);
     user* usr(0);
     if(!searchuser(delusr,usr))
         cout << "can't find your name" << endl;
@@ -271,7 +281,7 @@ void manager::deluser()
             {
                 usertree.RB_DELETE(delusr);
                 usernum--;
-		cout << "user deleted!" << endl;
+                cout << "user deleted!" << endl;
             }
         }
     }
@@ -282,17 +292,18 @@ bool manager::ismanagerkey() const
 {
     cout << "Please input manager key: ";
     string inkey;
-    cin >> inkey;
+    getline(cin,inkey);
     while(inkey != managerkey)
     {
         cout << "wrong key!" << endl;
         cout << "Input again? input y or n " << endl;
         char choice;
         cin >> choice;
+	getchar();
         if(choice == 'y')
         {
             cout << "Input your key: ";
-            cin >> inkey;
+	    getline(cin,inkey);
         }
         else
             return false;
@@ -308,27 +319,28 @@ void manager::addbook()
         book bk;
         cout << "Input the book's name: ";
         string tmp;
-        cin >> tmp;
+        getline(cin, tmp);
         while(searchbook(tmp))
         {
             cout << "Sorry, the book is already in the library" << endl;
             cout << "Input again? input y or n " << endl;
             char choice;
             cin >> choice;
+	    getchar();
             if(choice == 'y')
             {
                 cout << "Input the book's name: ";
-                cin >> tmp;
+                getline(cin, tmp);
             }
             else
                 return;
         }
         bk.setbkname(tmp);
         cout << "Input isbn: ";
-        cin >> tmp;
+        getline(cin, tmp);
         bk.setisbn(tmp);
         cout << "Input the author: ";
-        cin >> tmp;
+        getline(cin, tmp);
         bk.setauthor(tmp);
         cout << "Done" << endl;
         booknum++;
@@ -343,19 +355,19 @@ void manager::delbook()
     {
         string delbk;
         cout << "Input the book's name:";
-        cin >> delbk;
+        getline(cin, delbk);
         book* bk(0);
         if(!searchbook(delbk,bk))
             cout << "can't find the book" << endl;
         else
         {
-            if(bk->state == borrowed)
+            if(bk->state == "borrowed")
                 cout << "the book is not returned yet!" << endl;
             else
             {
                 booktree.RB_DELETE(delbk);
                 booknum--;
-		cout << "Done!" << endl;
+                cout << "Done!" << endl;
             }
         }
     }
@@ -366,7 +378,7 @@ void manager::borrowbook()
 {
     string bbk;
     cout << "Input the book's name:";
-    cin >> bbk;
+    getline(cin, bbk);
     book* bk(0);
     if(!searchbook(bbk,bk))
         cout << "can't find the book" << endl;
@@ -374,7 +386,7 @@ void manager::borrowbook()
     {
         string busr;
         cout << "Input your name:";
-        cin >> busr;
+        getline(cin, busr);
         user* usr(0);
         if(!searchuser(busr,usr))
             cout << "can't find your name" << endl;
@@ -385,8 +397,8 @@ void manager::borrowbook()
                 if(userkey(usr))
                 {
                     usr->addbook(bk);
-                    bk->setstate(borrowed);
-		    cout << "Done!" << endl;
+                    bk->setstate("borrowed");
+                    cout << "Done!" << endl;
                 }
             }
             else
@@ -400,7 +412,7 @@ void manager::returnbook()
 {
     string rbk;
     cout << "Input the book's name:";
-    cin >> rbk;
+    getline(cin, rbk);
     book* bk(0);
     if(!searchbook(rbk,bk))
         cout << "can't find the book" << endl;
@@ -408,15 +420,15 @@ void manager::returnbook()
     {
         string rusr;
         cout << "Input your name:";
-        cin >> rusr;
+        getline(cin, rusr);
         user* usr(0);
         if(!searchuser(rusr,usr))
             cout << "can't find user name" << endl;
         else
         {
             usr->returnbook(bk);
-            bk->setstate(clean);
-	    cout << "Done!" << endl;
+            bk->setstate("clean");
+            cout << "Done!" << endl;
         }
     }
 }
@@ -428,9 +440,60 @@ void manager::getlibraryinfo()
     cout << booknum << " books and" << endl;
     cout << usernum << " users" << endl;
 }
-/*
+
+
 void manager::savechanges()
 {
+	if(bookfilename == "none"){
+		cout << "It seems that you don't have a bookfile yet, please name your bookfile(file formate 'txt')" << endl;
+	getline(cin, bookfilename);}
+	savebook();
+	if(bookfilename == "none"){
+		cout << "It seems that you don't have a bookfile yet, Please name your userfile(file formate 'txt')" << endl;
+	getline(cin, userfilename);}
+	saveuser();
+	cout << "Done!" << endl;
 }
-*/
+
+fstream outbkfile;
+void manager::savebook() 
+{
+	outbkfile.open(bookfilename.c_str(), ios::out);
+	savebook(booktree.root, booktree.nill);
+	outbkfile.close();
+}
+
+//中序写入
+void manager::savebook(node<string,book>* root, node<string,book>* nill)
+{
+	if(root != nill)
+	{
+	outbkfile << root->data.isbn  << " " << root->data.author << " " << root->data.state << " " << root->data.bkname << endl;
+	 	savebook(root->leftchild,nill);	
+		savebook(root->rightchild,nill);
+	}
+}
+
+
+fstream outurfile;
+void manager::saveuser() 
+{
+	outurfile.open(userfilename.c_str(), ios::out);
+	saveuser(usertree.root, usertree.nill);
+	outurfile.close();
+}
+
+void manager::saveuser(node<string,user>* root, node<string,user>* nill)
+{
+	if(root != nill)
+	{
+	outurfile << root->data.name << " " << root->data.number << " " << root->data.email << " " << root->data.key << " " << root->data.booknum << endl;
+	for(int i = 0; i < root->data.booknum; i++)
+	{
+		outurfile << root->data.mybook[i]->bkname << endl;
+	}
+	 	saveuser(root->leftchild,nill);	
+		saveuser(root->rightchild,nill);
+	}
+}
 #endif // MANAGER_H_INCLUDED

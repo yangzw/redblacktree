@@ -10,7 +10,6 @@
 
 using namespace std;
 
-enum State {clean=0, borrowed};
 
 class book
 {
@@ -19,12 +18,12 @@ private:
     string bkname;
     string author;
     string isbn;
-    State state;
+    string state;
 public:
     book();
     book(const string& name);
     book(const string& name, const string& ibn, const string& ath);
-    book(const string& name, const string& ibn, const string& ath, const State& st);
+    book(const string& name, const string& ibn, const string& ath, const string& st);
     book(const book& bk);//复制构造函数
     book& operator=(const book& bk);//赋值操作符
     void getinfor();
@@ -32,7 +31,7 @@ public:
     string getauthor() const;
     string getisbn() const;
     void getstate();
-    void setstate(const State& state);
+    void setstate(const string& state);
     void setbkname(const string& name);
     void setauthor(const string& author);
     void setisbn(const string& isbn);
@@ -40,21 +39,21 @@ public:
 
 book::book()
 {
-    state = clean;
+    state = "clean";
 }
 
-book::book(const string& name):bkname(name),state(clean) {};
+book::book(const string& name):bkname(name),state("clean") {};
 
 book::book(const string& name, const string& ibn, const string& ath)
 {
     bkname = name;
     isbn = ibn;
     author = ath;
-    state = clean;
+    state = "clean";
     //:bkname(name),isbn(ibn),author(ath),state(clean)
 };
 
-book::book(const string& name, const string& ibn, const string& ath, const State& st)
+book::book(const string& name, const string& ibn, const string& ath, const string& st)
 {
     bkname = name;
     isbn = ibn;
@@ -109,7 +108,7 @@ void book::getstate()
     cout << "State: " << state << endl;
 }
 
-void book::setstate(const State& state)
+void book::setstate(const string& state)
 {
     this->state = state;
 }
