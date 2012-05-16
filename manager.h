@@ -7,9 +7,12 @@
 #include<fstream>
 #include<string>
 #include<sstream>
+#include<vector>
 #include "user.h"
 #include "book.h"
 #include "redblacktree.h"
+#include "Author.h"
+#include "keywords.h"
 
 using namespace std;
 
@@ -21,10 +24,13 @@ private:
     string managerkey;//管理员密码
     string bookfilename;
     string userfilename;
-    redblacktree<string,book> booktree;//用户的红黑树
-    redblacktree<string,user> usertree;//图书的红黑树
+    redblacktree<string,book> booktree;//图书指针的红黑树
+    redblacktree<string,Author> Authortree;//作者的红黑树
+    redblacktree<string,user> usertree;//用户的红黑树
+    redblacktree<string,keywords> keytree;//关键字的红黑树
     bool searchbook(const string& bookname,book*& srbook) const;//搜索图书，按照书名搜索
     bool searchbook(const string& bookname) const;
+    bool searchAuthor(const string& athname, Author*& srAuthor) const;//搜索作者
     bool searchuser(const string& usrname,user*& srusr) const;//搜寻用户
     bool searchuser(const string& usrname) const;
     bool userkey(user* ur) const;//验证用户的密码
@@ -38,8 +44,8 @@ void saveuser(node<string,user>* root, node<string,user>* nill);
 public:
     manager();
     void loadfile();
-    void setdefaultfile();//设置数据默认存取的文件
     void searchbook();//查找书籍
+    void searchAuthor();//查找作者
     void getuserinfo();//得到用户的信息
     void addusr();//加入用户
     void deluser();//用户注销账号
@@ -101,9 +107,18 @@ bool manager::loadfileprocess()
             ss >> bkname;
             while(ss >> bknametmp)
                 bkname = bkname + " " + bknametmp;
-            book* newbk = new book(bkname,isbn,author,state);
-            booktree.RB_insert(*newbk,newbk->bkname);
+            book newbk(bkname,isbn,author,state);
+            node<string,book>* tmp = booktree.RB_insert(newbk,newbk.bkname);
+	    book* nbk = &tmp->data;
             booknum++;
+	    Author* ath = NULL;
+	    if(searchAuthor(newbk.author,ath))
+	    	ath->addbook(nbk);
+	    else
+	    {
+		ath = new Author(nbk);
+		Authortree.RB_insert(*ath,newbk.author);
+	    }
         }
     }
     inbkfile.close();
@@ -146,12 +161,6 @@ bool manager::loadfileprocess()
     return flag;
 }
 
-//设置数据文件默认保存的位置
-void manager::setdefaultfile()
-{
-    loadfile();
-}
-
 bool manager::searchbook(const string& bookname,book*& srbook) const
 {
     return booktree.search(bookname,srbook);
@@ -161,6 +170,12 @@ bool manager::searchbook(const string& bookname) const
 {
     return booktree.search(bookname);
 }
+
+bool manager::searchAuthor(const string& athname, Author*& srAuthor) const
+{
+	return Authortree.search(athname,srAuthor);
+}
+
 
 void manager::searchbook()
 {
@@ -174,6 +189,20 @@ void manager::searchbook()
         cout << "Can't find such book!" << endl;
 }
 
+void manager::searchAuthor()
+{
+	cout << "Input the author: ";
+	string athname;
+	getline(cin, athname);
+	Author* srAuthor = NULL;
+	if(searchAuthor(athname,srAuthor))
+	{
+		cout << "The books of " << athname << " are as follows:" << endl;
+		srAuthor->show();
+	}
+	else
+		cout << "Can't find such author!" << endl;
+}
 
 bool manager::searchuser(const string& usrname, user*& sruser) const
 {
@@ -342,9 +371,18 @@ void manager::addbook()
         cout << "Input the author: ";
         getline(cin, tmp);
         bk.setauthor(tmp);
-        cout << "Done" << endl;
         booknum++;
-        booktree.RB_insert(bk, bk.bkname);
+        node<string,book>* nod = booktree.RB_insert(bk, bk.bkname);
+	book* bkk = &nod->data;
+	Author* ath = NULL;
+	if(searchAuthor(bk.author,ath))
+		ath->addbook(bkk);
+	else
+	{
+		ath = new Author(bkk);
+		Authortree.RB_insert(*ath,bk.author);
+	}
+        cout << "Done" << endl;
     }
 }
 
@@ -365,6 +403,13 @@ void manager::delbook()
                 cout << "the book is not returned yet!" << endl;
             else
             {
+	        Author* au = NULL;
+		if(searchAuthor(bk->getauthor(),au))
+		{
+			au->delbook(bk);
+			if(au->getbknum() == 0)
+				Authortree.RB_DELETE(au->getauthor());
+		}
                 booktree.RB_DELETE(delbk);
                 booknum--;
                 cout << "Done!" << endl;
@@ -448,8 +493,8 @@ void manager::savechanges()
 		cout << "It seems that you don't have a bookfile yet, please name your bookfile(file formate 'txt')" << endl;
 	getline(cin, bookfilename);}
 	savebook();
-	if(bookfilename == "none"){
-		cout << "It seems that you don't have a bookfile yet, Please name your userfile(file formate 'txt')" << endl;
+	if(userfilename == "none"){
+		cout << "It seems that you don't have a userfile yet, Please name your userfile(file formate 'txt')" << endl;
 	getline(cin, userfilename);}
 	saveuser();
 	cout << "Done!" << endl;

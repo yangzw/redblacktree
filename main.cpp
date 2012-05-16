@@ -8,30 +8,6 @@ void start(manager& mmanager);//开始
 
 int main()
 {
-    /*
-        redblacktree<int,int> test;
-        int i(0);
-        cout << "try for brach" << endl;
-        for(; i < 5; ++i)
-        {
-            test.RB_insert(i,i);
-        }
-        test.pre_tree_walk();
-        test.mid_tree_walk();
-        test.RB_DELETE(3);
-        cout << test.getsize() << endl;
-        test.pre_tree_walk();
-        test.mid_tree_walk();
-        test.RB_insert(7,7);
-        test.RB_insert(3,3);
-        test.pre_tree_walk();
-        test.mid_tree_walk();
-       // test.RB_insert(6,6);
-        cout << test.search(5) << endl;
-        test.RB_DELETE(7);
-        test.pre_tree_walk();
-        test.mid_tree_walk();
-    */
     manager Mainmanager;
     start(Mainmanager);
     return 0;
@@ -46,7 +22,7 @@ void printhead()
     cout << "		* 4.借书   5.还书   	   6.注销用户         *" << endl;
     cout << "		* 7.添加图书（管理员）     8.删除图书（管理员)*" << endl;
     cout << "		* 9.查看图书馆信息         10.保存修改 	      *" << endl;
-    cout << "		* 11.重新载入文件 	   0.退出 	      *" << endl;
+    cout << "		* 11. 查找作者		    0.退出 	      *" << endl;
     cout << "		-----------------------------------------------" << endl;
 }
 
@@ -57,7 +33,7 @@ void start(manager& mmanager)
     cin >> choice1;
     getchar();
     if(choice1 == 'y')
-    	mmanager.loadfile();
+        mmanager.loadfile();
     printhead();
     cout << endl;
     cout << "< < < < < < < < < < < < < "<< endl;
@@ -95,12 +71,12 @@ void start(manager& mmanager)
         case(9):
             mmanager.getlibraryinfo();
             break;
-	case(10):
-	    mmanager.savechanges();
-	    break;
-	case(11):
-	    mmanager.setdefaultfile();
-	    break;
+        case(10):
+            mmanager.savechanges();
+            break;
+        case(11):
+            mmanager.searchAuthor();
+            break;
         default:
             cout << "Wrong input!" << endl;
         }
