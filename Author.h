@@ -68,6 +68,6 @@ int Author::getbknum()
 
 string Author::getauthor() const
 {
-	return Authorname;
+    return Authorname;
 }
 #endif // AUTHOR_H_INCLUDED

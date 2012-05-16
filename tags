@@ -1,0 +1,158 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AUTHOR_H_INCLUDED	Author.h	4;"	d
+Author	Author.h	/^Author::Author()\/\/string��list���Դ����캯��$/;"	f	class:Author
+Author	Author.h	/^Author::Author(book*& bk)$/;"	f	class:Author
+Author	Author.h	/^class Author$/;"	c
+Authorname	Author.h	/^    string Authorname;$/;"	m	class:Author
+Authortree	manager.h	/^    redblacktree<string,Author> Authortree;\/\/作者的红黑树$/;"	m	class:manager
+BOOK_H_INCLUDED	book.h	5;"	d
+BORROWBOOKLIMIT	user.h	10;"	d
+Color	redblacktree.h	/^enum Color {black = 0, red};$/;"	g
+KEYWORDS_H_INCLUDED	keywords.h	2;"	d
+MANAGER_H_INCLUDED	manager.h	5;"	d
+RB_DELETE	redblacktree.h	/^bool redblacktree<K,T>::RB_DELETE(const K& dkey)$/;"	f	class:redblacktree
+RB_DELETE	redblacktree.h	/^void redblacktree<K,T>::RB_DELETE(node<K,T>* x)$/;"	f	class:redblacktree
+RB_DELETE_fixup	redblacktree.h	/^void redblacktree<K,T>::RB_DELETE_fixup(node<K,T>* x)$/;"	f	class:redblacktree
+RB_insert	redblacktree.h	/^node<K,T>* redblacktree<K,T>::RB_insert(const T& data, const K& insrtkey)\/\/�����㷨$/;"	f	class:redblacktree
+RB_insert_fixup	redblacktree.h	/^void redblacktree<K,T>::RB_insert_fixup(node<K,T>* x)$/;"	f	class:redblacktree
+REDBLACKTREE_H_INCLUDED	redblacktree.h	2;"	d
+USER_H_INCLUDED	user.h	5;"	d
+addbook	Author.h	/^void Author::addbook(book*& bk)$/;"	f	class:Author
+addbook	keywords.h	/^void keywords::addbook(book* bk)$/;"	f	class:keywords
+addbook	manager.h	/^void manager::addbook()$/;"	f	class:manager
+addbook	user.h	/^bool user::addbook(book* newbook)$/;"	f	class:user
+addusr	manager.h	/^void manager::addusr()$/;"	f	class:manager
+author	book.h	/^    string author;$/;"	m	class:book
+bklist	Author.h	/^    list<book*> bklist;$/;"	m	class:Author
+bkname	book.h	/^    string bkname;$/;"	m	class:book
+bknum	Author.h	/^    int bknum;$/;"	m	class:Author
+bknum	keywords.h	/^    int bknum;$/;"	m	class:keywords
+black	redblacktree.h	/^enum Color {black = 0, red};$/;"	e	enum:Color
+book	book.h	/^book::book()$/;"	f	class:book
+book	book.h	/^book::book(const book& bk)$/;"	f	class:book
+book	book.h	/^book::book(const string& name):bkname(name),state("clean") {};$/;"	f	class:book
+book	book.h	/^book::book(const string& name, const string& ibn, const string& ath)$/;"	f	class:book
+book	book.h	/^book::book(const string& name, const string& ibn, const string& ath, const string& st)$/;"	f	class:book
+book	book.h	/^class book$/;"	c
+bookfilename	manager.h	/^    string bookfilename;$/;"	m	class:manager
+booknum	manager.h	/^    int booknum;\/\/书的数目$/;"	m	class:manager
+booknum	user.h	/^    int booknum;\/\/借书的数量$/;"	m	class:user
+booktree	manager.h	/^    redblacktree<string,book> booktree;\/\/图书指针的红黑树$/;"	m	class:manager
+borrowbook	manager.h	/^void manager::borrowbook()$/;"	f	class:manager
+color	redblacktree.h	/^    Color color;$/;"	m	class:node
+data	redblacktree.h	/^    T data;$/;"	m	class:node
+delbook	Author.h	/^void Author::delbook(book*& bk)$/;"	f	class:Author
+delbook	keywords.h	/^void keywords::delbook(book*& bk)$/;"	f	class:keywords
+delbook	manager.h	/^void manager::delbook()$/;"	f	class:manager
+deluser	manager.h	/^void manager::deluser()$/;"	f	class:manager
+email	user.h	/^    string email;\/\/邮箱$/;"	m	class:user
+empty	redblacktree.h	/^bool redblacktree<K,T>::empty() const$/;"	f	class:redblacktree
+getauthor	Author.h	/^string Author::getauthor() const$/;"	f	class:Author
+getauthor	book.h	/^string book::getauthor() const$/;"	f	class:book
+getbkname	book.h	/^string book::getbkname() const$/;"	f	class:book
+getbknum	Author.h	/^int Author::getbknum()$/;"	f	class:Author
+getbknum	keywords.h	/^int keywords::getbknum()$/;"	f	class:keywords
+getbooknumb	user.h	/^int user::getbooknumb() const$/;"	f	class:user
+getemail	user.h	/^string user::getemail() const$/;"	f	class:user
+getinfor	book.h	/^void book::getinfor()$/;"	f	class:book
+getisbn	book.h	/^string book::getisbn() const$/;"	f	class:book
+getkeywords	keywords.h	/^string keywords::getkeywords() const$/;"	f	class:keywords
+getlibraryinfo	manager.h	/^void manager::getlibraryinfo()$/;"	f	class:manager
+getname	user.h	/^string user::getname() const$/;"	f	class:user
+getnumber	user.h	/^string user::getnumber() const$/;"	f	class:user
+getsize	redblacktree.h	/^int redblacktree<K,T>::getsize() const$/;"	f	class:redblacktree
+getstate	book.h	/^void book::getstate()$/;"	f	class:book
+getuserinfo	manager.h	/^void manager::getuserinfo()$/;"	f	class:manager
+isbn	book.h	/^    string isbn;$/;"	m	class:book
+isbookfull	user.h	/^bool user::isbookfull() const$/;"	f	class:user
+ismanagerkey	manager.h	/^bool manager::ismanagerkey() const$/;"	f	class:manager
+key	keywords.h	/^    string key;$/;"	m	class:keywords
+key	redblacktree.h	/^    K key;$/;"	m	class:node
+key	user.h	/^    string key;\/\/密码$/;"	m	class:user
+keytree	manager.h	/^    redblacktree<string,keywords> keytree;\/\/关键字的红黑树$/;"	m	class:manager
+keywords	keywords.h	/^class keywords$/;"	c
+keywords	keywords.h	/^keywords::keywords()$/;"	f	class:keywords
+keywords	keywords.h	/^keywords::keywords(book*& bk, string& keywd)$/;"	f	class:keywords
+left_rotate	redblacktree.h	/^void redblacktree<K,T>::left_rotate(node<K,T>* x)$/;"	f	class:redblacktree
+leftchild	redblacktree.h	/^    node<K,T>* leftchild;$/;"	m	class:node
+loadfile	manager.h	/^void manager::loadfile()$/;"	f	class:manager
+loadfileprocess	manager.h	/^bool manager::loadfileprocess()$/;"	f	class:manager
+main	main.cpp	/^int main()$/;"	f
+manager	manager.h	/^class manager$/;"	c
+manager	manager.h	/^manager::manager()$/;"	f	class:manager
+managerkey	manager.h	/^    string managerkey;\/\/管理员密码$/;"	m	class:manager
+mid_tree_walk	redblacktree.h	/^void redblacktree<K,T>::mid_tree_walk()$/;"	f	class:redblacktree
+mid_tree_walk	redblacktree.h	/^void redblacktree<K,T>::mid_tree_walk(node<K,T>* root)$/;"	f	class:redblacktree
+mybook	user.h	/^    book* mybook[BORROWBOOKLIMIT];\/\/借的书$/;"	m	class:user
+name	user.h	/^    string name;\/\/姓名$/;"	m	class:user
+nill	redblacktree.h	/^    node<K,T>* nill;\/\/����NULL$/;"	m	class:redblacktree
+node	redblacktree.h	/^    node()$/;"	f	class:node
+node	redblacktree.h	/^    node(const Color& color)$/;"	f	class:node
+node	redblacktree.h	/^    node(const T& data, const K& key)$/;"	f	class:node
+node	redblacktree.h	/^    node(const T& data, const K& key, const Color& color)$/;"	f	class:node
+node	redblacktree.h	/^class node$/;"	c
+number	user.h	/^    string number;\/\/学号$/;"	m	class:user
+operator =	book.h	/^book& book::operator=(const book& bk)$/;"	f	class:book
+operator =	redblacktree.h	/^    node<K,T>& operator = (const node<K,T>& Node)\/\/���ظ�ֵ����$/;"	f	class:node
+operator =	user.h	/^user& user::operator=(const user &usr)$/;"	f	class:user
+outbkfile	manager.h	/^fstream outbkfile;$/;"	v
+outurfile	manager.h	/^fstream outurfile;$/;"	v
+parent	redblacktree.h	/^    node<K,T>* parent;$/;"	m	class:node
+pre_tree_walk	redblacktree.h	/^void redblacktree<K,T>::pre_tree_walk()$/;"	f	class:redblacktree
+pre_tree_walk	redblacktree.h	/^void redblacktree<K,T>::pre_tree_walk(node<K,T>* root)$/;"	f	class:redblacktree
+printhead	main.cpp	/^void printhead()$/;"	f
+rbsearch	redblacktree.h	/^node<K,T>* redblacktree<K,T>::rbsearch(const K& srkey) const$/;"	f	class:redblacktree
+red	redblacktree.h	/^enum Color {black = 0, red};$/;"	e	enum:Color
+redblacktree	redblacktree.h	/^    redblacktree()$/;"	f	class:redblacktree
+redblacktree	redblacktree.h	/^class redblacktree$/;"	c
+returnbook	manager.h	/^void manager::returnbook()$/;"	f	class:manager
+returnbook	user.h	/^void user::returnbook(book* rbook)$/;"	f	class:user
+right_rotate	redblacktree.h	/^void redblacktree<K,T>::right_rotate(node<K,T>* x)$/;"	f	class:redblacktree
+rightchild	redblacktree.h	/^    node<K,T>* rightchild;$/;"	m	class:node
+root	redblacktree.h	/^    node<K,T>* root;$/;"	m	class:redblacktree
+savebook	manager.h	/^void manager::savebook() $/;"	f	class:manager
+savebook	manager.h	/^void manager::savebook(node<string,book>* root, node<string,book>* nill)$/;"	f	class:manager
+savechanges	manager.h	/^void manager::savechanges()$/;"	f	class:manager
+saveuser	manager.h	/^void manager::saveuser() $/;"	f	class:manager
+saveuser	manager.h	/^void manager::saveuser(node<string,user>* root, node<string,user>* nill)$/;"	f	class:manager
+search	redblacktree.h	/^bool redblacktree<K,T>::search(const K& srkey) const$/;"	f	class:redblacktree
+search	redblacktree.h	/^bool redblacktree<K,T>::search(const K& srkey,  T*& datapoint) const$/;"	f	class:redblacktree
+searchAuthor	manager.h	/^bool manager::searchAuthor(const string& athname, Author*& srAuthor) const$/;"	f	class:manager
+searchAuthor	manager.h	/^void manager::searchAuthor()$/;"	f	class:manager
+searchbook	manager.h	/^bool manager::searchbook(const string& bookname) const$/;"	f	class:manager
+searchbook	manager.h	/^bool manager::searchbook(const string& bookname,book*& srbook) const$/;"	f	class:manager
+searchbook	manager.h	/^void manager::searchbook()$/;"	f	class:manager
+searchuser	manager.h	/^bool manager::searchuser(const string& usrname) const$/;"	f	class:manager
+searchuser	manager.h	/^bool manager::searchuser(const string& usrname, user*& sruser) const$/;"	f	class:manager
+setauthor	book.h	/^void book::setauthor(const string& author)$/;"	f	class:book
+setbkname	book.h	/^void book::setbkname(const string& bkname)$/;"	f	class:book
+setemail	user.h	/^void user::setemail(const string& email)$/;"	f	class:user
+setisbn	book.h	/^void book::setisbn(const string& isbn)$/;"	f	class:book
+setname	user.h	/^void user::setname(const string& name)$/;"	f	class:user
+setnumber	user.h	/^void  user::setnumber(const string& number)$/;"	f	class:user
+setstate	book.h	/^void book::setstate(const string& state)$/;"	f	class:book
+show	Author.h	/^void  Author::show()$/;"	f	class:Author
+show	keywords.h	/^void keywords::show()$/;"	f	class:keywords
+showinfo	user.h	/^void user::showinfo()$/;"	f	class:user
+size	redblacktree.h	/^    int size;$/;"	m	class:redblacktree
+start	main.cpp	/^void start(manager& mmanager)$/;"	f
+state	book.h	/^    string state;$/;"	m	class:book
+tree_destroy	redblacktree.h	/^void redblacktree<K,T>::tree_destroy(node<K,T>* current)$/;"	f	class:redblacktree
+tree_max	redblacktree.h	/^node<K,T>*  redblacktree<K,T>::tree_max(node<K,T>* rt)$/;"	f	class:redblacktree
+tree_min	redblacktree.h	/^node<K,T>* redblacktree<K,T>::tree_min(node<K,T>* rt)$/;"	f	class:redblacktree
+tree_successor	redblacktree.h	/^node<K,T>* redblacktree<K,T>::tree_successor(node<K,T>* x)$/;"	f	class:redblacktree
+user	user.h	/^class user$/;"	c
+user	user.h	/^user::user()$/;"	f	class:user
+user	user.h	/^user::user(const string& name)$/;"	f	class:user
+user	user.h	/^user::user(const string& name, const string& number, const string& email, const string& key)$/;"	f	class:user
+user	user.h	/^user::user(const user &usr)$/;"	f	class:user
+userfilename	manager.h	/^    string userfilename;$/;"	m	class:manager
+userkey	manager.h	/^bool manager::userkey(user* ur) const$/;"	f	class:manager
+usernum	manager.h	/^    int usernum;\/\/用户数量$/;"	m	class:manager
+usertree	manager.h	/^    redblacktree<string,user> usertree;\/\/用户的红黑树$/;"	m	class:manager
+~redblacktree	redblacktree.h	/^    ~redblacktree()$/;"	f	class:redblacktree
