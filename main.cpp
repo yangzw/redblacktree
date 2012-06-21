@@ -46,7 +46,7 @@ void printhead()
     cout << "		* 4.借书   5.还书   	   6.注销用户         *" << endl;
     cout << "		* 7.添加图书（管理员）     8.删除图书（管理员)*" << endl;
     cout << "		* 9.查看图书馆信息         10.保存修改 	      *" << endl;
-    cout << "		* 11.重新载入文件 	   0.退出 	      *" << endl;
+    cout << "		* 0.退出 	 			      *" << endl;
     cout << "		-----------------------------------------------" << endl;
 }
 
@@ -97,9 +97,6 @@ void start(manager& mmanager)
             break;
 	case(10):
 	    mmanager.savechanges();
-	    break;
-	case(11):
-	    mmanager.setdefaultfile();
 	    break;
         default:
             cout << "Wrong input!" << endl;

@@ -38,7 +38,6 @@ void saveuser(node<string,user>* root, node<string,user>* nill);
 public:
     manager();
     void loadfile();
-    void setdefaultfile();//设置数据默认存取的文件
     void searchbook();//查找书籍
     void getuserinfo();//得到用户的信息
     void addusr();//加入用户
@@ -144,12 +143,6 @@ bool manager::loadfileprocess()
         }
     }
     return flag;
-}
-
-//设置数据文件默认保存的位置
-void manager::setdefaultfile()
-{
-    loadfile();
 }
 
 bool manager::searchbook(const string& bookname,book*& srbook) const
