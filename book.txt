@@ -1,2 +1,8 @@
 2 NL borrowed Hello
 1 HL borrowed Given three
+<<<<<<< HEAD
+=======
+4 HL clean i want to kill time
+4 BP clean Yeah!
+5 BR clean kill me
+>>>>>>> 26801362b28ee2a0a752d7ae0f3444b0cbf1c5b5

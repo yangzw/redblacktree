@@ -49,10 +49,6 @@ private:
         rightchild = leftchild = parent = NULL;
     }
 
-    void visit()
-    {
-        cout << key;    //测试用
-    }
     node<K,T>& operator = (const node<K,T>& Node)//重载赋值操作
     {
         this->color = Node.color;
@@ -90,7 +86,7 @@ public:
     node<K,T>* tree_min(node<K,T>* rt);
     bool search(const K& srkey, T*& data) const;
     bool search(const K& srkey) const;
-    void RB_insert(const T& data,const K& insrtkey);//插入算法
+    node<K,T>* RB_insert(const T& data,const K& insrtkey);//插入算法
     bool RB_DELETE(const K& dkey);//删除算法
     void RB_DELETE(node<K,T>* x);//删除某个节点
     bool empty() const;
@@ -284,7 +280,7 @@ void redblacktree<K,T>::right_rotate(node<K,T>* x)
 }
 
 template<class K, class T>
-void redblacktree<K,T>::RB_insert(const T& data, const K& insrtkey)//插入算法
+node<K,T>* redblacktree<K,T>::RB_insert(const T& data, const K& insrtkey)//插入算法
 {
     /*测试用
     cout << key << "hel" << endl;
@@ -317,6 +313,7 @@ void redblacktree<K,T>::RB_insert(const T& data, const K& insrtkey)//插入算法
     }
     RB_insert_fixup(x);//插入调整，使之满足红黑树性质
     ++ size;//节点加一
+    return x;
 }
 //插入调整
 template<class K, class T>
